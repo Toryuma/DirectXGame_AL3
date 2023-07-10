@@ -8,3 +8,6 @@ Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeRotateXYZMatrix(Matrix4x4& rotateX, Matrix4x4& rotateY, Matrix4x4& rotateZ);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Vector3 Add(const Vector3& v1, const Vector3& v2);
+Vector3 Subtract(const Vector3& v1, const Vector3& v2);
+Vector3 Multiply(float scalar, const Vector3& v);

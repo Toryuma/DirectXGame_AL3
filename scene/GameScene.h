@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include"DebugCamera.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -49,6 +50,10 @@ private: // メンバ変数
 	uint32_t texHandle_ = 0;
 	Model* model_;
 	Player* player_ = nullptr;
+	
+	bool isDebugCameraActive_ = false;
+	DebugCamera* debugCamera_ = nullptr;
+
 
 	/// <summary>
 	/// ゲームシーン用
