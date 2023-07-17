@@ -1,9 +1,9 @@
 #pragma once
 #include "Input.h"
 #include "Model.h"
-#include "PlayerBullet.h"
 #include "WorldTransform.h"
 #include "cassert"
+#include "PlayerBullet.h"
 
 class Player {
 
@@ -18,10 +18,9 @@ public:
 
 private:
 	WorldTransform worldTransform_;
-
 	Model* model_ = nullptr;
-
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
-	PlayerBullet* bullet_ = nullptr;
+
+	PlayerBullet* bullet_;
 };

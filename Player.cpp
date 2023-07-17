@@ -15,7 +15,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-};
+}
 
 void Player::Attack() {
 	if (input_->PushKey(DIK_SPACE)) {
