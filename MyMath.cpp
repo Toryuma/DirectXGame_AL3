@@ -210,7 +210,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
 }
-// 減産
+// 減算
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
 }

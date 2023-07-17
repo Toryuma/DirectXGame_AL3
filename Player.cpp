@@ -17,6 +17,15 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 };
 
+void Player::Attack() {
+	if (input_->PushKey(DIK_SPACE)) {
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		bullet_ = newBullet;
+	}
+}
+
 void Player::Update() {
 	worldTransform_.TransferMatrix();
 
@@ -57,7 +66,15 @@ void Player::Update() {
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
-	// キーボード移動処理
+	//旋回処理
+	const float kRotSpeed = 0.02f;
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y = worldTransform_.rotation_.y - kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y = worldTransform_.rotation_.y + kRotSpeed;
+	}
+
+	// 移動処理
 	Vector3 move = {0, 0, 0};
 	const float kCharacterSpeed = 0.2f;
 	if (input_->PushKey(DIK_LEFT)) {
@@ -81,6 +98,14 @@ void Player::Update() {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
+	//攻撃処理
+	Attack();
+
+	//bullet_はif文だとbullet_ != nullptrと同じ
+	if (bullet_) {
+		bullet_->Update();
+	}
+
 	ImGui::Begin("Debug");
 	float playerPos[] = {
 	    worldTransform_.translation_.x, 
@@ -99,4 +124,9 @@ void Player::Update() {
 
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
+	}
 }
+
