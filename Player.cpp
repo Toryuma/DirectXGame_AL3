@@ -1,8 +1,8 @@
 #include "Player.h"
+#include "ImGuiManager.h"
 #include "cassert"
 #include <Model.h>
 #include <MyMath.h>
-#include "ImGuiManager.h"
 
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 
@@ -18,13 +18,18 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 }
 
 void Player::Attack() {
+	// 発射トリガー
 	if (input_->PushKey(DIK_SPACE)) {
 
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, worldTransform_.translation_);
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 		bullets_.push_back(newBullet);
 	}
-
 }
 
 void Player::Update() {
@@ -67,8 +72,17 @@ void Player::Update() {
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
-	//旋回処理
-	const float kRotSpeed = 0.02f;
+	// デスフラグの立った弾を削除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	    // 旋回処理
+	    const float kRotSpeed = 0.02f;
 	if (input_->PushKey(DIK_A)) {
 		worldTransform_.rotation_.y = worldTransform_.rotation_.y - kRotSpeed;
 	} else if (input_->PushKey(DIK_D)) {
@@ -99,24 +113,22 @@ void Player::Update() {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-	//攻撃処理
+	// 攻撃処理
 	Attack();
-	
+
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
 
 	////bullet_はif文だとbullet_ != nullptrと同じ
-	//if (bullets_) {
+	// if (bullets_) {
 	//	bullets_->Update();
-	//}
+	// }
 
 	ImGui::Begin("Debug");
 	float playerPos[] = {
-	    worldTransform_.translation_.x, 
-		worldTransform_.translation_.y,
-	    worldTransform_.translation_.z
-	};
+	    worldTransform_.translation_.x, worldTransform_.translation_.y,
+	    worldTransform_.translation_.z};
 	ImGui::SliderFloat3("PlayerPos", playerPos, 30, 15);
 
 	worldTransform_.translation_.x = playerPos[0];
@@ -130,16 +142,16 @@ void Player::Update() {
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	//if (bullets_) {
+	// if (bullets_) {
 	//	bullets_->Draw(viewProjection);
-	//}
+	// }
 
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
 }
 
-Player::~Player() {  
+Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
