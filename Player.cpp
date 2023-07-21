@@ -19,11 +19,12 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 void Player::Attack() {
 	if (input_->PushKey(DIK_SPACE)) {
+
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialize(model_, worldTransform_.translation_);
-
-		bullet_ = newBullet;
+		bullets_.push_back(newBullet);
 	}
+
 }
 
 void Player::Update() {
@@ -100,11 +101,15 @@ void Player::Update() {
 
 	//攻撃処理
 	Attack();
-
-	//bullet_はif文だとbullet_ != nullptrと同じ
-	if (bullet_) {
-		bullet_->Update();
+	
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Update();
 	}
+
+	////bullet_はif文だとbullet_ != nullptrと同じ
+	//if (bullets_) {
+	//	bullets_->Update();
+	//}
 
 	ImGui::Begin("Debug");
 	float playerPos[] = {
@@ -125,8 +130,17 @@ void Player::Update() {
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	if (bullet_) {
-		bullet_->Draw(viewProjection);
+	//if (bullets_) {
+	//	bullets_->Draw(viewProjection);
+	//}
+
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
 	}
 }
 
+Player::~Player() {  
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}

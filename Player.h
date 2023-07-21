@@ -4,6 +4,8 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include "PlayerBullet.h"
+#include "Player.h"
+#include<list>
 
 class Player {
 
@@ -16,11 +18,14 @@ public:
 
 	void Draw(ViewProjection& viewProjection);
 
+	~Player();
+
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 
-	PlayerBullet* bullet_;
+	/*PlayerBullet* bullet_;*/
+	std::list<PlayerBullet*> bullets_;
 };
