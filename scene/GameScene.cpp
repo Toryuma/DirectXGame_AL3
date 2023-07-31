@@ -84,9 +84,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	player_->Draw(viewProjection_);
 
-	/*if (enemy_ != nullptr) {*/
+	if (enemy_ != nullptr) {
 		enemy_->Draw(viewProjection_);
-	//}
+	}
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
