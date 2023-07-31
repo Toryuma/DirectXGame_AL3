@@ -136,7 +136,6 @@ void Player::Update() {
 	worldTransform_.translation_.z = playerPos[2];
 	ImGui::End();
 
-	worldTransform_.TransferMatrix();
 }
 
 void Player::Draw(ViewProjection& viewProjection) {

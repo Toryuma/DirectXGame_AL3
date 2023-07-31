@@ -1,8 +1,8 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "ImGuiManager.h"
 #include "TextureManager.h"
 #include <cassert>
-#include"AxisIndicator.h"
 
 GameScene::GameScene() {}
 
@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -18,11 +19,15 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	texHandle_ = TextureManager::Load("megaMan.jpg");
+	texHandlePlayer_ = TextureManager::Load("megaMan.jpg");
+	texhandleEnemy_ = TextureManager::Load("airMan.png");
+
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 	player_ = new Player();
-	player_->Initialize(model_, texHandle_);
+	player_->Initialize(model_, texHandlePlayer_);
+	enemy_ = new Enemy();
+	enemy_->Initialize(model_, texhandleEnemy_);
 
 	debugCamera_ = new DebugCamera(1000, 440);
 
@@ -34,9 +39,11 @@ void GameScene::Update() {
 	player_->Update();
 	debugCamera_->Update();
 
+	enemy_->Update();
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {
-		isDebugCameraActive_=true;
+		isDebugCameraActive_ = true;
 	}
 #endif
 	if (isDebugCameraActive_) {
@@ -45,7 +52,7 @@ void GameScene::Update() {
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 
 		viewProjection_.TransferMatrix();
-	}else {
+	} else {
 		viewProjection_.UpdateMatrix();
 	}
 }
@@ -76,6 +83,10 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	player_->Draw(viewProjection_);
+
+	/*if (enemy_ != nullptr) {*/
+		enemy_->Draw(viewProjection_);
+	//}
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
