@@ -59,7 +59,7 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 }
 
 void Enemy::moveApproach() {
-	velocity_ = {0.0f, 0.0f, -0.01f};
+	velocity_ = {0.0f, 0.0f, -0.5f};
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	if (worldTransform_.translation_.z < 5.0f) {
 		phase_ = Phase::Leave;
