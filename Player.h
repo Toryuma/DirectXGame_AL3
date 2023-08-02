@@ -4,7 +4,6 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include "PlayerBullet.h"
-#include "Player.h"
 #include<list>
 
 class Player {
