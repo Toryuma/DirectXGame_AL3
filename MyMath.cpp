@@ -224,3 +224,13 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	    v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]};
 	return result;
 }
+
+float Dot(const Vector3& v1, const Vector3& v2) { return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z; }
+// 長さ(ノルム)
+float Length(const Vector3& v) { return sqrtf(Dot(v, v)); }
+
+Vector3 Normalize(const Vector3& v) {
+	float length = Length(v);
+	assert(length != 0.0f);
+	return {v.x / length, v.y / length, v.z / length};
+}

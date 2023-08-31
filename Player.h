@@ -5,6 +5,7 @@
 #include "cassert"
 #include "PlayerBullet.h"
 #include<list>
+#include "Vector3.h"
 
 class Player {
 
@@ -12,6 +13,8 @@ public:
 	void Initialize(Model* model, uint32_t textureHandle);
 
 	void Attack();
+
+	Vector3 GetWorldPosition();
 
 	void Update();
 

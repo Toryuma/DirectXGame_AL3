@@ -15,6 +15,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 	input_ = Input::GetInstance();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
+
 }
 
 void Player::Attack() {
@@ -30,6 +31,16 @@ void Player::Attack() {
 		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 		bullets_.push_back(newBullet);
 	}
+}
+
+Vector3 Player::GetWorldPosition() { 
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
 }
 
 void Player::Update() {
@@ -81,8 +92,8 @@ void Player::Update() {
 		return false;
 	});
 
-	    // 旋回処理
-	    const float kRotSpeed = 0.02f;
+	// 旋回処理
+	const float kRotSpeed = 0.02f;
 	if (input_->PushKey(DIK_A)) {
 		worldTransform_.rotation_.y = worldTransform_.rotation_.y - kRotSpeed;
 	} else if (input_->PushKey(DIK_D)) {
@@ -135,7 +146,6 @@ void Player::Update() {
 	worldTransform_.translation_.y = playerPos[1];
 	worldTransform_.translation_.z = playerPos[2];
 	ImGui::End();
-
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
